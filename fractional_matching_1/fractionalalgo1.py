@@ -195,7 +195,6 @@ class Algorithm:
         print("vertex cover:", self.heavy_nodes)
         print("{} out of {}".format(len(self.heavy_nodes), self.n))
         print("fractional matching of weight {}".format(round(sum(self.weight)/2, 3)))
-        print([node for node in range(self.n) if self.is_violation(node) and node in self.heavy_nodes])
 
     def vertex_cover(self):
         return self.heavy_nodes
