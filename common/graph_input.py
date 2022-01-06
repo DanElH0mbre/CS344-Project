@@ -3,7 +3,7 @@ import sys, importlib, animator
 class GraphInput:
     def __init__(self):
         #A dictionary to map the algorithm name to the directory and filename
-        algorithms = {"fractional1": ["../fractional_matching_1", "fractionalalgo1"]}
+        algorithms = {"fractional1": ["../fractional_matching_1", "fractionalalgo1"], "fractional2": ["../fractional_matching_2", "fractionalalgo2"], "integral1": ["../integral_matching_1", "integralalgo1"], "integral2": ["../integral_matching_2", "integralalgo2"]}
 
 
         path = algorithms[sys.argv[1]][0]
@@ -22,8 +22,12 @@ class GraphInput:
 
         epsilon = float(str_file[0][0])
         n = int(str_file[0][1])
+        bip_cut = 0
+        is_integral = "integral" in fname
+        if is_integral:
+            bip_cut = int(str_file[0][2])
         self.vis = animator.Animator(n)
-        Graph = alg.Algorithm(epsilon, n)
+        Graph = alg.Algorithm(epsilon, n) if not is_integral else alg.Algorithm(epsilon, n, bip_cut)
         
         # We apply each update to both the algorithm and the animator
         for update in str_file[1:]:
@@ -39,8 +43,14 @@ class GraphInput:
         Graph.toString()
 
         #This should be edited once future algorithms are added, since not all of them compute a vertex cover.
-        vc = Graph.vertex_cover()
-        self.vis.highlight_vc(vc)
+        #vc = Graph.vertex_cover()
+        #self.vis.highlight_vc(vc)
+        if is_integral:
+            matching = Graph.matching
+            self.vis.highlight_matching(matching)
+        else:
+            vc = Graph.vertex_cover()
+            self.vis.highlight_vc(vc)
         
         
 

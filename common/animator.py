@@ -16,7 +16,7 @@ class Animator:
         self.centre = [h/2, w/2]
         self.graph_r = 300
         self.nodes = [None for i in range(n)]
-        self.lines = [[None for i in range(n)] for j in range(n)]
+        self.edges = [[None for i in range(n)] for j in range(n)]
         for node in range(n):
             x = self.node_pos_x(node)
             y = self.node_pos_y(node)
@@ -33,20 +33,26 @@ class Animator:
 
     #Draws the edge (u, v) on the graph.
     def insert(self, u, v):
-        line = self.canvas.create_line(self.nodes[u][1], self.nodes[u][2], self.nodes[v][1], self.nodes[v][2], fill="black", width = 1)
-        self.lines[u][v] = line
-        self.lines[v][u] = line
+        line = self.canvas.create_line(self.nodes[u][1], self.nodes[u][2], self.nodes[v][1], self.nodes[v][2], fill="grey", width = 1)
+        self.edges[u][v] = line
+        self.edges[v][u] = line
         self.window.update_idletasks()
         self.window.update()
 
     #Remove the edge (u, v) from the graph.
     def delete(self, u, v):
-        line = self.lines[u][v]
+        line = self.edges[u][v]
         self.canvas.delete(line)
-        self.lines[u][v] = None
-        self.lines[v][u] = None
+        self.edges[u][v] = None
+        self.edges[v][u] = None
 
     #Colours the set of nodes given green, which indicates the approximated minimum vertex cover.
     def highlight_vc(self, nodes):
         for node in nodes:
             self.canvas.itemconfig(self.nodes[node][0], fill="green")
+
+    def highlight_matching(self, edges):
+        for u in edges:
+            v = edges[u]
+            self.canvas.itemconfig(self.edges[u][v], fill = "green", width = 3)
+            self.canvas.itemconfig(self.edges[v][u], fill = "green", width = 3)
